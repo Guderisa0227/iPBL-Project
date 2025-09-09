@@ -1,12 +1,15 @@
 import os
 import mediapipe as mp
 import numpy as np
+import tkinter as tk
+
 # https://github.com/opencv/opencv/issues/17687
 os.environ["OPENCV_VIDEOIO_MSMF_ENABLE_HW_TRANSFORMS"] = "0"
 import cv2
 from ClsJudgeAngleFront import ClsJudgeAngleFront
 from ClsJudgeAngleSide import ClsJudgeAngleSide
 from ClsDrawCenterLine import ClsDrawCenterLine
+from ClsResizeWindow import ClsResizeWindow
 
 mp_pose = mp.solutions.pose
 mp_drawing = mp.solutions.drawing_utils
@@ -25,13 +28,30 @@ def main():
     clsJudgeAngleFront = ClsJudgeAngleFront()
     clsJudgeAngleSide = ClsJudgeAngleSide()
     clsDrawCenterLine = ClsDrawCenterLine()
+    clsResizeWindow = ClsResizeWindow()
 
     cap = cv2.VideoCapture(0)
+    frame_count = 0
+    N = 20
+
+    # window name
+    window_name = "Camera Fullscreen"
+
+    # create window
+    clsResizeWindow.setFullscreen(window_name)
+
+    # change fullscreen
+    cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+    root = tk.Tk()
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
 
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
             break
+        frame = clsResizeWindow.resizeWindow(frame, screen_width, screen_height)
+        frame_count += 1
 
         image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         results = pose.process(image)
@@ -59,21 +79,25 @@ def main():
             
             if shoulder_distance < 50:
                 cv2.putText(image, "SIDE", (0, 50),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
-                clsJudgeAngleSide.judgeAngleSide(ear, shoulder, hip, knee, image)
+                        cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 255, 0), 2)
+                clsJudgeAngleSide.judgeAngleSide(ear, shoulder, hip, knee, image, screen_width, screen_height, frame_count)
             else:
                 cv2.putText(image, "FRONT", (0, 50),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 255), 2)
-                clsJudgeAngleFront.judgeAngleFront(image, landmarks)
+                        cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 0, 255), 2)
+                clsJudgeAngleFront.judgeAngleFront(image, landmarks, screen_width, screen_height, frame_count)
 
             # draw centerLine
             clsDrawCenterLine.drawCenterLine(image, landmarks)
 
-        cv2.imshow("Posture Correction with Center Line", image)
+            if frame_count >= N:
+                frame_count = 0
+
+        cv2.imshow(window_name, image)
 
         if cv2.waitKey(10) & 0xFF == ord('q'):
             break
 
+    root.destroy()
     cap.release()
     cv2.destroyAllWindows()
 

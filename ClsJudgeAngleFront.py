@@ -4,13 +4,15 @@ import numpy as np
 # https://github.com/opencv/opencv/issues/17687
 os.environ["OPENCV_VIDEOIO_MSMF_ENABLE_HW_TRANSFORMS"] = "0"
 import cv2
+from ClsPlaySound import ClsPlaySound
 
 class ClsJudgeAngleFront:
     def __init__(self):
         self.mp_pose = mp.solutions.pose
         self.mp_drawing = mp.solutions.drawing_utils
+        clsPlaySound = ClsPlaySound()
 
-    def judgeAngleFront(self, image, landmarks):
+    def judgeAngleFront(self, image, landmarks, screen_width, screen_height, frame_count):
         # centerPoint
         ear_center = np.array([(landmarks[self.mp_pose.PoseLandmark.LEFT_EAR.value].x +
                             landmarks[self.mp_pose.PoseLandmark.RIGHT_EAR.value].x) / 2,
@@ -61,11 +63,21 @@ class ClsJudgeAngleFront:
         print("ESH:", judge_ESH, " SHK:", judge_SHK)
 
         if judge_ESH <= 15 and judge_SHK <= 15 and diff <= 5:
+            if frame_count == 10:
+                ClsPlaySound.playsound("Sound/Yes.mp3")
             cv2.putText(image, "Good!", (50, 100),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                        cv2.FONT_HERSHEY_TRIPLEX, 2, (0, 255, 0), 4)
+            cv2.putText(image, "Great posture!", (int(screen_width / 2)-100, screen_height-75),
+                        cv2.FONT_HERSHEY_TRIPLEX, 1.5, (0, 255, 0), 2)
         elif judge_ESH < 20 and judge_SHK < 20 and diff <= 15:
             cv2.putText(image, "Risk!", (50, 100),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+                        cv2.FONT_HERSHEY_TRIPLEX, 2, (0, 255, 255), 4)
+            cv2.putText(image, "Be careful!! There is still hope!!", (int(screen_width / 2)-100, screen_height-75),
+                        cv2.FONT_HERSHEY_TRIPLEX, 1.5, (0, 255, 255), 2)
         else:
+            if frame_count == 10:
+                ClsPlaySound.playsound("Sound/No.mp3")
             cv2.putText(image, "Not Good!!!", (50, 100),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                        cv2.FONT_HERSHEY_TRIPLEX, 2, (0, 0, 255), 4)
+            cv2.putText(image, "I'm worried about your health...", (int(screen_width / 2)-100, screen_height-75),
+                        cv2.FONT_HERSHEY_TRIPLEX, 1.5, (0, 0, 255), 2)
