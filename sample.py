@@ -78,12 +78,12 @@ def main():
             shoulder_distance = np.sqrt((lx - rx) ** 2 + (ly - ry) ** 2)
             
             if shoulder_distance < 50:
-                cv2.putText(image, "SIDE", (0, 50),
-                        cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 255, 0), 2)
+                cv2.putText(image, "SIDE", (50, 50),
+                        cv2.FONT_HERSHEY_TRIPLEX, 1.2, (255, 255, 0), 2)
                 clsJudgeAngleSide.judgeAngleSide(ear, shoulder, hip, knee, image, screen_width, screen_height, frame_count)
             else:
-                cv2.putText(image, "FRONT", (0, 50),
-                        cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 0, 255), 2)
+                cv2.putText(image, "FRONT", (50, 50),
+                        cv2.FONT_HERSHEY_TRIPLEX, 1.2, (255, 0, 255), 2)
                 clsJudgeAngleFront.judgeAngleFront(image, landmarks, screen_width, screen_height, frame_count)
 
             # draw centerLine
