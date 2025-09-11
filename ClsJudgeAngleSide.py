@@ -1,14 +1,19 @@
 import os
 import mediapipe as mp
 import numpy as np
+import time
 # https://github.com/opencv/opencv/issues/17687
 os.environ["OPENCV_VIDEOIO_MSMF_ENABLE_HW_TRANSFORMS"] = "0"
 import cv2
 from ClsPlaySound import ClsPlaySound
 
 class ClsJudgeAngleSide:
+    #kp start
     def __init__(self):
-        clsPlaySound = ClsPlaySound()
+        self.clsPlaySound = ClsPlaySound()
+        self.bad_posture_start = None
+        self.was_bad_posture = False
+    #kp end
     def judgeAngleSide(self, ear, shoulder, hip, knee, image, screen_width, screen_height, frame_count):
         earArea = np.array([ear.x, ear.y])
         shoulderArea = np.array([shoulder.x, shoulder.y])
@@ -35,9 +40,13 @@ class ClsJudgeAngleSide:
         print("ESH:", judge_ESH, " SHK:", judge_SHK)
 
         if judge_ESH <= 10 and judge_SHK <= 10:
+            #kp start
             if frame_count == 10:
-                ClsPlaySound.playsound("Sound/Yes.mp3")
-            
+                if self.was_bad_posture:  # If previously was in bad posture
+                    self.clsPlaySound.play_with_delay("Sound/Yes.mp3", delay=0)  # Play immediately
+                    self.was_bad_posture = False
+                self.bad_posture_start = None
+            #kp end
             (width, height), baseline= cv2.getTextSize("Good!", cv2.FONT_HERSHEY_TRIPLEX, 2, 4)
             top_left_point = (25, 125 - height)
             bottom_right_point = (75 + width, 175)
@@ -66,9 +75,15 @@ class ClsJudgeAngleSide:
             cv2.putText(image, "Be careful!! There is still hope!!", (int(screen_width / 2)-100, screen_height-75),
                         cv2.FONT_HERSHEY_TRIPLEX, 1.5, (0, 255, 255), 2)
         else:
-            if frame_count == 10:
-                ClsPlaySound.playsound("Sound/No.mp3")
-            
+            #KP start
+            current_time = time.time()
+            if self.bad_posture_start is None:
+                self.bad_posture_start = current_time
+                self.was_bad_posture = True
+            elif current_time - self.bad_posture_start >= 3:  # 3 seconds threshold
+                self.clsPlaySound.play_with_delay("Sound/No.mp3", delay=0)
+                self.bad_posture_start = current_time  # Reset timer
+            #KP end
             (width, height), baseline= cv2.getTextSize("Not Good!!!", cv2.FONT_HERSHEY_TRIPLEX, 2, 4)
             top_left_point = (25, 125 - height)
             bottom_right_point = (75 + width, 175)
