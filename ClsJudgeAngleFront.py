@@ -85,11 +85,11 @@ class ClsJudgeAngleFront:
                         cv2.FONT_HERSHEY_TRIPLEX, 2, (0, 255, 0), 4)
             
             (width, height), baseline= cv2.getTextSize("Great posture!", cv2.FONT_HERSHEY_TRIPLEX, 1.5, 2)
-            top_left_point = (int(screen_width / 2)-120, screen_height-100 - height)
-            bottom_right_point = (int(screen_width / 2)-80 + width, screen_height-50)
+            top_left_point = (int(screen_width / 2)-320, screen_height-100 - height)
+            bottom_right_point = (int(screen_width / 2)-280 + width, screen_height-50)
             cv2.rectangle(image, top_left_point, bottom_right_point, (0,0,0), -1)
            
-            cv2.putText(image, "Great posture!", (int(screen_width / 2)-100, screen_height-75),
+            cv2.putText(image, "Great posture!", (int(screen_width / 2)-300, screen_height-75),
                         cv2.FONT_HERSHEY_TRIPLEX, 1.5, (0, 255, 0), 2)
         elif judge_ESH < 20 and judge_SHK < 20 and diff <= 15:
             (width, height), baseline= cv2.getTextSize("Risk!", cv2.FONT_HERSHEY_TRIPLEX, 2, 4)
@@ -100,10 +100,10 @@ class ClsJudgeAngleFront:
                         cv2.FONT_HERSHEY_TRIPLEX, 2, (0, 255, 255), 4)
            
             (width, height), baseline= cv2.getTextSize("Be careful!! There is still hope!!", cv2.FONT_HERSHEY_TRIPLEX, 1.5, 2)
-            top_left_point = (int(screen_width / 2)-120, screen_height-100 - height)
-            bottom_right_point = (int(screen_width / 2)-80 + width, screen_height-50)
+            top_left_point = (int(screen_width / 2)-320, screen_height-100 - height)
+            bottom_right_point = (int(screen_width / 2)-280 + width, screen_height-50)
             cv2.rectangle(image, top_left_point, bottom_right_point, (0,0,0), -1)
-            cv2.putText(image, "Be careful!! There is still hope!!", (int(screen_width / 2)-100, screen_height-75),
+            cv2.putText(image, "Be careful!! There is still hope!!", (int(screen_width / 2)-300, screen_height-75),
                         cv2.FONT_HERSHEY_TRIPLEX, 1.5, (0, 255, 255), 2)
         else:
             #KP start
@@ -123,8 +123,8 @@ class ClsJudgeAngleFront:
                         cv2.FONT_HERSHEY_TRIPLEX, 2, (0, 0, 255), 4)
             
             (width, height), baseline= cv2.getTextSize("I'm worried about your health...", cv2.FONT_HERSHEY_TRIPLEX, 1.5, 2)
-            top_left_point = (int(screen_width / 2)-120, screen_height-100 - height)
-            bottom_right_point = (int(screen_width / 2)-80 + width, screen_height-50)
+            top_left_point = (int(screen_width / 2)-320, screen_height-100 - height)
+            bottom_right_point = (int(screen_width / 2)-280 + width, screen_height-50)
             cv2.rectangle(image, top_left_point, bottom_right_point, (0,0,0), -1)
-            cv2.putText(image, "I'm worried about your health...", (int(screen_width / 2)-100, screen_height-75),
+            cv2.putText(image, "I'm worried about your health...", (int(screen_width / 2)-300, screen_height-75),
                         cv2.FONT_HERSHEY_TRIPLEX, 1.5, (0, 0, 255), 2)
