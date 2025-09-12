@@ -2,46 +2,52 @@ block_cipher = None
 
 a = Analysis(
     ['sample.py'],
-pathex=[],
-binaries = [],
-datas = [('Sound/*.mp3', 'Sound'),
-         ('assets/*','assets'),
-          ('.venv/lib/site-packages/mediapipe/modules', 'mediapipe/modules')],
-hiddenimports = ['numpy', 'cv2', 'pygame'],
-hookspath = [],
-hooksconfig = {},
-runtime_hooks = [],
-excludes = [],
-win_no_prefer_redirects = False,
-win_private_assemblies = False,
-cipher = block_cipher,
-noarchive = False,
+    pathex=[],
+    binaries=[],
+    datas=[
+        ('Sound/*.mp3', 'Sound'),
+        ('assets/*', 'assets'),
+        ('.venv/Lib/site-packages/mediapipe/modules', 'mediapipe/modules')
+    ],
+    hiddenimports=['pygame', 'numpy', 'cv2', 'mediapipe'],
+    hookspath=[],
+    hooksconfig={},
+    runtime_hooks=[],
+    excludes=[],
+    win_no_prefer_redirects=False,
+    win_private_assemblies=False,
+    cipher=block_cipher,
+    noarchive=False,
 )
 
-pyz  = PYZ(a.pure, a.zipped_data, cipher = block_cipher)
+pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
-exe = EXE( pyz,
-          a.scripts,
-          [],
-          exclude_binaries = True,
-          name = 'AlignMe',
-          debug = False,
-          bootLoader_ignore_signals = False,
-          strip = False,
-          upx = True,
-          console = True,
-          icon = 'assets/Align_me.ico',
-          disable_windowed_traceback = False,
-          argv_emulation = False,
-          target_arch = None,
-          codesign_identity = None,
-          entitlements_file = None,)
+exe = EXE(
+    pyz,
+    a.scripts,
+    [],
+    exclude_binaries=True,
+    name='AlignMe',
+    debug=False,
+    bootloader_ignore_signals=False,
+    strip=False,
+    upx=True,
+    console=False,
+    icon='assets/Align_me.ico',
+    disable_windowed_traceback=False,
+    argv_emulation=False,
+    target_arch=None,
+    codesign_identity=None,
+    entitlements_file=None,
+)
 
-coll = COLLECT(exe,
-               a.binaries,
-               a.zipfiles,
-               a.datas,
-               strip = False,
-               upx = True,
-               upx_exclude = [],
-               name = 'AligneMe')
+coll = COLLECT(
+    exe,
+    a.binaries,
+    a.zipfiles,
+    a.datas,
+    strip=False,
+    upx=True,
+    upx_exclude=[],
+    name='AlignMe'
+)
