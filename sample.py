@@ -1,5 +1,6 @@
 import os
 import mediapipe as mp
+import cv2
 import numpy as np
 import tkinter as tk
 
@@ -24,6 +25,7 @@ pose = mp_pose.Pose(
 )
 
 def main():
+
     # instantiation
     clsJudgeAngleFront = ClsJudgeAngleFront()
     clsJudgeAngleSide = ClsJudgeAngleSide()
